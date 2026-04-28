@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import SignIn from './signin'
-import SignUp from './signup'
-import Verify from './verify'
+import SignInForm from './components/SignInForm'
+import SignUpForm from './components/SignUpForm'
+import VerifyOtpForm from './components/VerifyOtpForm'
 import Onboarding from '../onboarding/page'
 import ChangePasswordPage from '../settings/change-password'
 import { supabase } from '@/lib/supabase/client'
@@ -36,7 +36,7 @@ export default function AuthPage() {
             </div>
             <div className='w-2/5 h-full px-20 py-20 flex items-center justify-center'>
                 {step === 'signup' && (
-                    <SignUp
+                    <SignUpForm
                         onSuccess={(email) => {
                             setSignupEmail(email)
                             setStep('verify')
@@ -46,7 +46,7 @@ export default function AuthPage() {
                 )}
 
                 {step === 'verify' && (
-                    <Verify
+                    <VerifyOtpForm
                         email={signupEmail}
                         onSuccess={() => setStep('onboarding')}
                     />
@@ -59,7 +59,7 @@ export default function AuthPage() {
                 )}
 
                 {step === 'signin' && (
-                    <SignIn
+                    <SignInForm
                         onSuccess={() => router.push('/home')}
                         onGoToSignUp={() => setStep('signup')}
                     />
