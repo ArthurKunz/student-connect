@@ -32,7 +32,7 @@ export async function GET(request: Request) {
         if (error) alert(error.message)
 
         return NextResponse.redirect(
-            `${requestUrl.origin}/login?step=reset-password`
+            `${requestUrl.origin}/forgot-password`
         )
     }
 
