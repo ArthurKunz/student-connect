@@ -22,7 +22,7 @@ export default function SchoolDataForm ({onSuccess, onGoBack}: SchoolDataProps) 
             <input type="number" placeholder="Notendurchschnitt" value={averagemark} className="p-2 border" step="0.1" min={0.8} max={6} onChange={(e) => setAveragemark(e.target.value)} required />
             <Combobox value={school} onChange={setSchool} topic={SCHOOLS}/>
             <button type="submit" className="bg-blue-500 text-white p-2 rounded" onClick={() => onSuccess(data)}>Save & Continue</button>
-            <button className="bg-blue-500 text-white p-2 rounded" onClick={() => onGoBack}>back</button>
+            <button className="bg-blue-500 text-white p-2 rounded" onClick={onGoBack}>back</button>
         </div>
     )
 }

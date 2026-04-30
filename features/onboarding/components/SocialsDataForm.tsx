@@ -20,7 +20,7 @@ export default function SocialsDataForm ({ onSuccess, onGoBack }: SocialsDataPro
             <input type="text" placeholder="Tiktok" value={tiktok} className="p-2 border" step="0.1" onChange={(e) => setTiktok(e.target.value)}/>
             <input type="text" placeholder="Snapchat" value={snapchat} className="p-2 border" step="0.1" onChange={(e) => setSnapchat(e.target.value)}/>
             <button className="bg-blue-500 text-white p-2 rounded" onClick={() => onSuccess(data)}>Save & Continue</button>
-            <button className="bg-blue-500 text-white p-2 rounded" onClick={() => onGoBack}>back</button>
+            <button className="bg-blue-500 text-white p-2 rounded" onClick={onGoBack}>back</button>
         </div>
     )
 }

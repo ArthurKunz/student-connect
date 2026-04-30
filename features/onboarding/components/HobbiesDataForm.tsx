@@ -114,7 +114,7 @@ export default function HobbiesDataForm ({ onSuccess, onGoBack }: HobbiesDataPro
                 )}
                 <p className="text-xs text-gray-500">{hobbies.length} / {MAX_HOBBIES} ausgewählt</p>
                 <button className="bg-blue-500 text-white p-2 rounded" onClick={() => onSuccess(hobbies)}>Save & Continue</button>
-                <button className="bg-blue-500 text-white p-2 rounded" onClick={() => onGoBack}>back</button>
+                <button className="bg-blue-500 text-white p-2 rounded" onClick={onGoBack}>back</button>
             </div>
         </div>
     )
