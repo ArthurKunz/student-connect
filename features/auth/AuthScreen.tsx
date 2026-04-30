@@ -5,14 +5,13 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import SignInForm from './components/SignInForm'
 import SignUpForm from './components/SignUpForm'
 import VerifyOtpForm from './components/VerifyOtpForm'
-import Onboarding from '../onboarding/page'
 import ChangePasswordPage from '../settings/change-password'
 import { supabase } from '@/lib/supabase/client'
 
 export default function AuthPage() {
     const router = useRouter()
     const searchParams = useSearchParams()
-    const [step, setStep] = useState<'signup' | 'signin' | 'verify' | 'onboarding' | 'reset-password'>('signup')
+    const [step, setStep] = useState<'signup' | 'signin' | 'verify' | 'reset-password'>('signup')
     const [signupEmail, setSignupEmail] = useState('')
 
 
@@ -20,7 +19,7 @@ export default function AuthPage() {
     useEffect(() => { 
         const stepParam = searchParams.get('step')
         if (stepParam === 'onboarding') {
-            setStep('onboarding')
+            router.push('/onboarding')
         }
         if (stepParam === 'reset-password') {
             setStep('reset-password')
@@ -48,13 +47,7 @@ export default function AuthPage() {
                 {step === 'verify' && (
                     <VerifyOtpForm
                         email={signupEmail}
-                        onSuccess={() => setStep('onboarding')}
-                    />
-                )}
-
-                {step === 'onboarding' && (
-                    <Onboarding
-                        onSuccess={() => router.push('/home')}
+                        onSuccess={() => router.push('/onboarding')}
                     />
                 )}
 
