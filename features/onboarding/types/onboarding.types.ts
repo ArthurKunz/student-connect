@@ -3,7 +3,6 @@ export type PersonalDataObject = {
   surname: string,
   birthday: string,
   gender: string,
-  height: string,
   relationship: string
 }
 

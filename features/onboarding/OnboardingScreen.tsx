@@ -32,7 +32,6 @@ export default function OnboardingScreen () {
             surname: personalData.surname,
             birthday: personalData.birthday,
             gender: personalData.gender,
-            height: Number(personalData.height),
             gradelevel: schoolData.gradelevel,
             averagemark: schoolData.averagemark,
             school: schoolData.school,

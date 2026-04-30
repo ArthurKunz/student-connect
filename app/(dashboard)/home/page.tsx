@@ -11,7 +11,6 @@ type Profile = {
     gradelevel: number;
     averagemark: number;
     gender: string;
-    height: number | null;
     relationship: string;
     instagram: string | null;
     tiktok: string | null;
@@ -49,7 +48,7 @@ export default function HomePage () {
           if (!session) { router.push('/login'); return }
     
           const { data } = await supabase.from('profiles')
-            .select('firstname, surname, birthday, gradelevel, averagemark, gender, height, relationship, instagram, tiktok, snapchat, school')
+            .select('firstname, surname, birthday, gradelevel, averagemark, gender, relationship, instagram, tiktok, snapchat, school')
             .eq('id', session.user.id)
             .single()
     
@@ -88,7 +87,6 @@ export default function HomePage () {
             <p><strong>Klassenstufe:</strong> {profile.gradelevel}</p>
             <p><strong>Notendurchschnitt:</strong> {profile.averagemark}</p>
             <p><strong>Geschlecht:</strong> {genderLabel[profile.gender]}</p>
-            <p><strong>Größe:</strong> {profile.height + ' cm'}</p>
             <p><strong>Beziehung:</strong> {relationshipLabel[profile.relationship]}</p>
             <p><strong>Instagram:</strong> {profile.instagram}</p>
             <p><strong>Tiktok:</strong> {profile.tiktok}</p>

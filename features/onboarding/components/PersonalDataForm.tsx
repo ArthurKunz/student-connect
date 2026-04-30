@@ -10,7 +10,6 @@ export default function PersonalDataForm ({ onSuccess }: PersonalDataProps) {
     const [month, setMonth] = useState('')
     const [year, setYear] = useState('')
     const [gender, setGender] = useState('')
-    const [height, setHeight] = useState('')
     const [relationship, setRelationship] = useState('')
 
     const birthday = `${year}-${month}-${day}`
@@ -19,7 +18,6 @@ export default function PersonalDataForm ({ onSuccess }: PersonalDataProps) {
         surname: surname,
         birthday: birthday,
         gender: gender,
-        height: height,
         relationship: relationship
     }
 
@@ -57,7 +55,6 @@ export default function PersonalDataForm ({ onSuccess }: PersonalDataProps) {
                 <option value="diverse">Divers</option>
                 <option value="prefer_not_to_say">Keine Angabe</option>
             </select>
-            <input type="number" placeholder="Größe (cm)" value={height} className="p-2 border" min={50} max={250} onChange={(e) => setHeight(e.target.value)} required />
             <select value={relationship} className="p-2 border bg-white" onChange={(e) => setRelationship(e.target.value)}>
                 <option value="" disabled>Beziehungsstatus</option>
                 <option value="single">Single</option>
