@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import PersonalDataForm from './components/PersonalDataForm'
+import ProfilePictureForm from './components/ProfilePictureForm'
 import HobbiesDataForm from './components/HobbiesDataForm'
 import SocialsDataForm from './components/SocialsDataForm'
 import SchoolDataForm from './components/SchoolDataForm'
@@ -13,8 +14,9 @@ import { supabase } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
 export default function OnboardingScreen () {
-    const [step, setStep] = useState<'personal' | 'hobby' | 'social' | 'school'>('personal')
+    const [step, setStep] = useState<'personal' | 'photo' | 'hobby' | 'social' | 'school'>('personal')
     const [personalData, setPersonalData] = useState<PersonalDataObject | null>(null)
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
     const [hobbiesData, setHobbiesData] = useState<string[] | null>(null)
     const [socialData, setSocialData] = useState<SocialDataObject | null>(null)
     const [schoolData, setSchoolData] = useState<SchoolDataObject | null>(null)
@@ -24,14 +26,16 @@ export default function OnboardingScreen () {
         const { data: { session } } = await getSession()
         if(!session) return
 
-        if (!personalData || !socialData || !schoolData || !hobbiesData) return
+        if (!personalData || !socialData || !schoolData || !hobbiesData || !avatarUrl) return
 
         const { error } = await supabase.from('profiles').insert({
             id: session.user.id,
+            avatar_url: avatarUrl,
             firstname: personalData.firstname,
             surname: personalData.surname,
             birthday: personalData.birthday,
             gender: personalData.gender,
+            relationship: personalData.relationship,
             gradelevel: schoolData.gradelevel,
             averagemark: schoolData.averagemark,
             school: schoolData.school,
@@ -52,8 +56,18 @@ export default function OnboardingScreen () {
                 <PersonalDataForm 
                     onSuccess={(data) => {
                         setPersonalData(data) 
+                        setStep('photo')
+                    }}
+                />
+            )}
+
+            {step === 'photo' && (
+                <ProfilePictureForm
+                    onSuccess={(url) => {
+                        setAvatarUrl(url)
                         setStep('hobby')
                     }}
+                    onGoBack={() => setStep('personal')}
                 />
             )}
 
@@ -63,7 +77,7 @@ export default function OnboardingScreen () {
                         setHobbiesData(data)
                         setStep('social')
                     }}
-                    onGoBack={() => setStep('personal')}
+                    onGoBack={() => setStep('photo')}
                 />
             )}
 

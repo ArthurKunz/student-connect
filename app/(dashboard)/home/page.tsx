@@ -12,6 +12,7 @@ type Profile = {
     averagemark: number;
     gender: string;
     relationship: string;
+    avatar_url: string | null;
     instagram: string | null;
     tiktok: string | null;
     snapchat: string | null;
@@ -48,7 +49,7 @@ export default function HomePage () {
           if (!session) { router.push('/login'); return }
     
           const { data } = await supabase.from('profiles')
-            .select('firstname, surname, birthday, gradelevel, averagemark, gender, relationship, instagram, tiktok, snapchat, school')
+            .select('firstname, surname, birthday, gradelevel, averagemark, gender, relationship, avatar_url, instagram, tiktok, snapchat, school')
             .eq('id', session.user.id)
             .single()
     
@@ -80,7 +81,15 @@ export default function HomePage () {
         <div className='w-full h-auto bg-blue-500 flex flex-col py-10 px-10 gap-5 items-center'>
         <h1 className='text-3xl text-blue-800 font-bold'>Homepage</h1>
         {profile && (
-          <div className="bg-white text-black w-full p-3 rounded">
+          <div className="bg-white text-black w-full p-3 rounded flex flex-col items-center gap-3">
+            {profile.avatar_url && (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={profile.avatar_url}
+                alt=""
+                className="h-24 w-24 rounded-full object-cover border border-gray-200"
+              />
+            )}
             <p><strong>Vorname</strong> {profile.firstname}</p>
             <p><strong>Nachname:</strong> {profile.surname}</p>
             <p><strong>Geburtstag:</strong> {new Date(profile.birthday).toLocaleDateString('de-DE')}</p>

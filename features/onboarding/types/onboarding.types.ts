@@ -22,6 +22,11 @@ export interface PersonalDataProps {
   onSuccess: (data: PersonalDataObject) => void
 }
 
+export interface ProfilePictureProps {
+  onSuccess: (avatarUrl: string) => void
+  onGoBack: () => void
+}
+
 export interface HobbiesDataProps {
   onSuccess: (data: string[]) => void
   onGoBack: () => void

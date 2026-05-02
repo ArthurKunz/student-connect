@@ -114,3 +114,7 @@ export const SCHOOLS = [
 ]
 
 export const MAX_HOBBIES = 5
+
+export const MAX_BYTES = 5 * 1024 * 1024
+
+export const BUCKET = 'avatars'
