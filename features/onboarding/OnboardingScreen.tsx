@@ -46,17 +46,6 @@ export default function OnboardingScreen () {
 
         if (!personalData || !socialData || !schoolData || !hobbiesData || !avatarUrl) return
 
-        const age = calculateAge(personalData.birthday)
-        if (age < 16) {
-            localStorage.setItem('pendingStudent', JSON.stringify({
-                name: `${personalData.firstname} ${personalData.surname}`.trim(),
-                email: session.user.email ?? '',
-                age,
-            }))
-            router.push('/parent-consent')
-            return
-        }
-
         const { error } = await supabase.from('profiles').insert({
             id: session.user.id,
             avatar_url: avatarUrl,
@@ -74,8 +63,13 @@ export default function OnboardingScreen () {
             hobbies: hobbiesData,
         })
 
+        const age = calculateAge(personalData.birthday)
         if (error) alert(error.message)
-        else router.push('/home')
+        else if (age < 16) {
+            router.push('/parent-consent')
+        } else {
+            router.push('/home')
+        }
     }
 
     return (

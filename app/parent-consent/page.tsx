@@ -10,6 +10,7 @@ export default function ParentConsent() {
   const [loading, setLoading] = useState(false)
   const [consentStatus, setConsentStatus] = useState<'pending' | 'approved' | 'rejected'>('pending')
   const [studentEmail, setStudentEmail] = useState('')
+  const [studentName, setStudentName] = useState('')
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
   const router = useRouter()
 
@@ -39,14 +40,22 @@ export default function ParentConsent() {
 
   async function handleSubmit() {
     setLoading(true)
-    const student = JSON.parse(localStorage.getItem('pendingStudent') ?? '{}')
-    setStudentEmail(student.email)
+
+    const {data: { session } } = await supabase.auth.getSession()
+    if (!session) { alert('Not logged in.'); return }
+    setStudentEmail(session.user.email ?? '')
+
+    const {data: profile, error: profileError } = await supabase.from('profiles')
+    .select('firstname, surname')
+    .eq('id', session.user.id)
+    .single()
+    if (profileError || !profile) { alert(profileError?.message ?? 'Profile not found.'); return }
 
     const { data, error } = await supabase
       .from('consent_requests')
       .insert({
-        student_name:  student.name,
-        student_email: student.email,
+        student_name:  `${profile.firstname} ${profile.surname}`,
+        student_email: session.user.email ?? '',
         parent_email:  parentEmail,
         status:        'pending'
       })
@@ -56,7 +65,7 @@ export default function ParentConsent() {
     if (error) { alert('Error: ' + error.message); setLoading(false); return }
 
     await supabase.functions.invoke('send-consent-email', {
-      body: { parentEmail, studentName: student.name, token: data.token }
+      body: { parentEmail, studentName: studentName, token: data.token }
     })
 
     setLoading(false)
