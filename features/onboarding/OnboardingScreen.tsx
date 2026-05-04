@@ -13,6 +13,24 @@ import { getSession } from './services/onboarding.service'
 import { supabase } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
+/** Full years since birthday; `birthday` is `YYYY-MM-DD` (e.g. from PersonalDataForm). */
+function calculateAge (birthday: string): number {
+    const parts = birthday.trim().split('-')
+    if (parts.length !== 3) return NaN
+    const year = Number(parts[0])
+    const month = Number(parts[1])
+    const day = Number(parts[2])
+    if (![year, month, day].every(Number.isFinite)) return NaN
+
+    const today = new Date()
+    let age = today.getFullYear() - year
+    const thisMonth = today.getMonth() + 1
+    if (thisMonth < month || (thisMonth === month && today.getDate() < day)) {
+        age -= 1
+    }
+    return age
+}
+
 export default function OnboardingScreen () {
     const [step, setStep] = useState<'personal' | 'photo' | 'hobby' | 'social' | 'school'>('personal')
     const [personalData, setPersonalData] = useState<PersonalDataObject | null>(null)
@@ -27,6 +45,17 @@ export default function OnboardingScreen () {
         if(!session) return
 
         if (!personalData || !socialData || !schoolData || !hobbiesData || !avatarUrl) return
+
+        const age = calculateAge(personalData.birthday)
+        if (age < 16) {
+            localStorage.setItem('pendingStudent', JSON.stringify({
+                name: `${personalData.firstname} ${personalData.surname}`.trim(),
+                email: session.user.email ?? '',
+                age,
+            }))
+            router.push('/parent-consent')
+            return
+        }
 
         const { error } = await supabase.from('profiles').insert({
             id: session.user.id,
