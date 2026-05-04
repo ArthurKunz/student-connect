@@ -38,12 +38,18 @@ export default function ParentConsent() {
     return () => clearInterval(pollingRef.current!)
   }, [sent, studentEmail])
 
+
+
+
+
   async function handleSubmit() {
     setLoading(true)
 
     const {data: { session } } = await supabase.auth.getSession()
     if (!session) { alert('Not logged in.'); return }
     setStudentEmail(session.user.email ?? '')
+
+    const { data: { user } } = await supabase.auth.getUser()
 
     const {data: profile, error: profileError } = await supabase.from('profiles')
     .select('firstname, surname')
@@ -54,6 +60,7 @@ export default function ParentConsent() {
     const { data, error } = await supabase
       .from('consent_requests')
       .insert({
+        user_id: user?.id ?? '',
         student_name:  `${profile.firstname} ${profile.surname}`,
         student_email: session.user.email ?? '',
         parent_email:  parentEmail,
@@ -72,11 +79,20 @@ export default function ParentConsent() {
     setSent(true)
   }
 
+
+
+
+
   async function handleRejected() {
     const { error } = await supabase.rpc('delete_self')
     if (error) alert(error.message)
     else { await supabase.auth.signOut(); router.push('/login') }
   }
+
+
+
+
+
 
   if (sent) {
     if (consentStatus === 'approved') return (
