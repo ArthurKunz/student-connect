@@ -73,11 +73,9 @@ export default function ParentConsent() {
   }
 
   async function handleRejected() {
-    // Delete the already-created account
-    const { error } = await supabase.functions.invoke('delete-user')
-    if (error) { alert('Error deleting account'); return }
-    localStorage.removeItem('pendingStudent')
-    router.push('/')
+    const { error } = await supabase.rpc('delete_self')
+    if (error) alert(error.message)
+    else { await supabase.auth.signOut(); router.push('/login') }
   }
 
   if (sent) {
