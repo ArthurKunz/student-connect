@@ -66,7 +66,7 @@ export default function OnboardingScreen () {
         const age = calculateAge(personalData.birthday)
         if (error) alert(error.message)
         else if (age < 16) {
-            router.push('/parent-consent')
+            router.push('/consent-request')
         } else {
             router.push('/home')
         }
