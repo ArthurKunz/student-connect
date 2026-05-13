@@ -29,37 +29,65 @@ export default function AuthPage() {
 
 
     return (
-        <div className='w-screen h-screen flex justify-between bg-[#fff] py-2.5'>
-            <div className='w-3/5 h-full bg-sky-500 rounded-3xl ml-2.5'>
-
+        <div className='w-screen h-screen p-2.5 flex bg-primary'>
+            <div className='w-3/5 flex justify-center items-end h-full rounded-3xl bg-[linear-gradient(180deg,#0056FF_0%,#0c0c0c_75%,#0c0c0c_100%)]'>
+                {(step === 'signup' || step === 'verify') && (
+                    <div className='flex flex-col items-center w-65 h-75 mb-15 gap-10'>
+                        <div className='flex flex-col items-center'>
+                            <span className='text-center text-sm text-brand font-semibold mb-2.5'>Student Connect</span>
+                            <span className='text-center text-3xl text-light-heading font-semibold mb-2'>Starte jetzt mit uns</span>
+                            <span className='text-center text-xs w-60 text-light-subheading'>Folge diesen einfachen Schritten, um deinen account zu erstellen</span>
+                        </div>
+                        <div className='w-full flex flex-col gap-2'>
+                            <div className='w-full h-12.5 bg-white rounded-xl flex gap-3 items-center px-3'>
+                                <div className='text-xs text-light-heading  w-6 h-6 bg-brand rounded-full flex justify-center items-center'>1</div>
+                                <span className='text-xs text-brand'>Erstelle deinen Account</span>
+                            </div>
+                            <div className='w-full h-12.5 bg-secondary rounded-xl flex gap-3 items-center px-3'>
+                                <div className='text-xs text-light-heading  w-6 h-6 bg-tertiary rounded-full flex justify-center items-center'>2</div>
+                                <span className='text-xs text-light-muted'>Verifiziere dein Account</span>
+                            </div>
+                            <div className='w-full h-12.5 bg-secondary rounded-xl flex gap-3 items-center px-3'>
+                                <div className='text-xs text-light-heading  w-6 h-6 bg-tertiary rounded-full flex justify-center items-center'>3</div>
+                                <span className='text-xs text-light-muted'>Erstelle dein Profil</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
-            <div className='w-2/5 h-full px-20 py-20 flex items-center justify-center'>
-                {step === 'signup' && (
-                    <SignUpForm
-                        onSuccess={(email) => {
-                            setSignupEmail(email)
-                            setStep('verify')
-                        }}
-                        onGoToSignIn={() => setStep('signin')}
-                    />
-                )}
 
-                {step === 'verify' && (
-                    <VerifyOtpForm
-                        email={signupEmail}
-                        onSuccess={() => router.push('/onboarding')}
-                    />
-                )}
+            <div className='relative w-2/5 h-full px-20 py-20 flex flex-col '>
+                <div className='w-full h-full'>
+                    {step === 'signup' && (
+                        <SignUpForm
+                            onSuccess={(email) => {
+                                setSignupEmail(email)
+                                setStep('verify')
+                            }}
+                            onGoToSignIn={() => setStep('signin')}
+                        />
+                    )}
 
-                {step === 'signin' && (
-                    <SignInForm
-                        onSuccess={() => router.push('/home')}
-                        onGoToSignUp={() => setStep('signup')}
-                    />
-                )}
-                {step === 'reset-password' && (
-                    <ChangePasswordPage onSuccess={() => router.push('/home')}/>
-                )}
+                    {step === 'verify' && (
+                        <VerifyOtpForm
+                            email={signupEmail}
+                            onSuccess={() => router.push('/onboarding')}
+                        />
+                    )}
+
+                    {step === 'signin' && (
+                        <SignInForm
+                            onSuccess={() => router.push('/home')}
+                            onGoToSignUp={() => setStep('signup')}
+                        />
+                    )}
+                    {step === 'reset-password' && (
+                        <ChangePasswordPage onSuccess={() => router.push('/home')}/>
+                    )}
+                </div>
+                <div className='absolute flex justify-center items-center w-full h-10 bg-primary bottom-0 left-[50%] translate-x-[-50%]'>
+                    <span className='text-xs text-center text-light-muted'>{step === 'signup' ? 'Du hast schon ein Account?' : 'Noch kein Account?'} <span className='text-brand text-sm font-semibold cursor-pointer' onClick={() => setStep(step === 'signup' ? 'signin' : 'signup')}>{step === 'signup' ? 'Login' : 'Sign Up'}</span></span>
+                </div>
             </div>
         </div>
     )
