@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import type { SignInProps } from '../types/auth.types'
 import { sendResetPasswordEmail, signInWithGoogle, signInWithPassword } from '../services/auth.service'
 
@@ -84,40 +85,63 @@ export default function SignInForm({ onSuccess, onGoToSignUp }: SignInProps) {
   }
 
   return (
-    <form onSubmit={handleSignIn} className='flex flex-col gap-4'>
-      <h2 className='text-lg font-bold'>Sign In</h2>
-      <input
-        type='email'
-        placeholder='Email'
-        value={email}
-        className='p-2 border'
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        type='password'
-        placeholder='Password'
-        value={password}
-        className='p-2 border'
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <button
-        type='button'
-        onClick={() => setStep('forgot')}
-        className='text-sm text-blue-500 hover:underline text-right'
-      >
-        Forgot password?
-      </button>
-      <button type='submit' className='bg-blue-500 text-white p-2 rounded'>
-        Sign In
-      </button>
-      <button type='button' onClick={handleGoogleSignIn} className='bg-white border p-2 rounded w-full'>
-        Sign In with Google
-      </button>
-      <button type='button' onClick={onGoToSignUp} className='text-blue-500 hover:underline text-left'>
-        Don't have an account? Sign Up
-      </button>
-    </form>
+    <div className='w-full h-full flex flex-col items-center gap-20'>
+
+      <div className='w-full h-full flex flex-col items-center gap-2.5'>
+        <h1 className='text-4xl font-bold text-lighttext'>Login</h1>
+        <span className='text-center text-sm text-graytext'>Log dich ein und lerne <span className='text-brand text-sm font-semibold '>Leipzig</span> kennen</span>
+      </div>
+
+      <form className='w-full flex flex-col gap-12.5' onSubmit={handleSignIn} noValidate>
+        <div className='w-full'>
+          <div className='w-full flex flex-col gap-5'>
+            <div className='w-full flex flex-col gap-2'>
+              <label className='text-sm text-graytext'>Email</label>
+              <input
+              type='email'
+              placeholder='max.mustermann@example.com'
+              className='w-full px-3 py-4 bg-inputbg rounded-md text-sm text-lighttext focus:outline-none placeholder:text-xs placeholder:text-inputplaceholder'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className='w-full flex flex-col gap-2'>
+              <label className='text-sm text-graytext'>Passwort</label>
+              <input
+              type='password'
+              placeholder='Gib dein Passwort ein'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className='w-full px-3 py-4 bg-inputbg rounded-md text-sm text-lighttext focus:outline-none placeholder:text-xs placeholder:text-inputplaceholder'
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className='w-full flex flex-col gap-5'>
+          <button 
+            type='submit'
+            className='flex w-full items-center justify-center gap-2 rounded-full bg-white py-3 text-sm font-semibold'
+          >
+            Login
+          </button>
+          <div className='w-full flex justify-between items-center'>
+            <div className='w-full h-0.25 bg-[#6C6C6C]'></div>
+            <span className='text-xs text-[#6C6C6C] px-2.5'>Oder</span>
+            <div className='w-full h-0.25 bg-[#6C6C6C]'></div>
+          </div>
+          <button
+            type='button'
+            onClick={handleGoogleSignIn}
+            className='flex w-full items-center justify-center gap-2 rounded-full bg-white py-3 text-sm font-semibold'
+          >
+            <Image src='/icons/Google.png' alt='' width={18} height={18} className='shrink-0' />
+            Google
+          </button>
+        </div>
+      </form>
+
+      <span className='text-xs text-graytext'>Du hast schon ein Account? <span className='text-brand text-sm font-semibold cursor-pointer' onClick={onGoToSignUp}>Sign Up</span></span>
+    </div>
   )
 }
