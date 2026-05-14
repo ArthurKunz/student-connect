@@ -1,7 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import Selectbox, { type SelectOption } from '@/components/shared/Selectbox'
 import type { PersonalDataProps } from '../types/onboarding.types'
+import { DAY_OPTIONS, MONTH_LABELS, MONTH_OPTIONS, GENDER_OPTIONS, RELATIONSHIP_OPTIONS } from '../constants/onboarding.constants'
+
 
 export default function PersonalDataForm ({ onSuccess }: PersonalDataProps) {
     const [firstname, setFirstname] = useState('')
@@ -11,6 +14,14 @@ export default function PersonalDataForm ({ onSuccess }: PersonalDataProps) {
     const [year, setYear] = useState('')
     const [gender, setGender] = useState('')
     const [relationship, setRelationship] = useState('')
+
+    const yearOptions = useMemo((): SelectOption[] => {
+      const currentYear = new Date().getFullYear()
+      return Array.from({ length: 100 }, (_, i) => {
+        const y = currentYear - i
+        return { value: String(y), label: String(y) }
+      })
+    }, [])
 
     const birthday = `${year}-${month}-${day}`
     const data = {
@@ -22,46 +33,94 @@ export default function PersonalDataForm ({ onSuccess }: PersonalDataProps) {
     }
 
     return (
-        <div className='flex flex-col gap-4'>
-            <h2 className='text-lg font-bold'>Set up your profile</h2>
-            <input type="text" placeholder="Vorname" value={firstname} className="p-2 border" onChange={(e) => setFirstname(e.target.value)} required />
-            <input type="text" placeholder="Nachname" value={surname} className="p-2 border" onChange={(e) => setSurname(e.target.value)} required />
+        <div className='w-full flex flex-col items-center gap-15'>
+            <div className='w-full h-full flex flex-col items-center gap-2.5'>
+                <h1 className='text-4xl font-bold text-light-heading'>Profil erstellen</h1>
+                <span className='text-center text-sm text-light-subheading'>Gib deine Informationen in den dafür vorgesehen Feldern ein</span>
+            </div>
+            <div className='w-full flex flex-col gap-7.5'>
+                <div className='w-full flex gap-2.5'>
+                    <div className='w-full flex flex-col gap-2'>
+                        <label className='text-xs text-light-label'>Vorname</label>
+                        <input 
+                        type="text" 
+                        placeholder="Vorname" 
+                        value={firstname} 
+                        className="w-full px-3 h-12 bg-input-bg rounded-md text-sm text-light focus:outline-none placeholder:text-xs placeholder:text-light-placeholder" 
+                        onChange={(e) => setFirstname(e.target.value)} 
+                        required 
+                        />
+                    </div>
+                    <div className='w-full flex flex-col gap-2'>
+                        <label className='text-xs text-light-label'>Nachname</label>
+                        <input 
+                        type="text" 
+                        placeholder="Nachname" 
+                        value={surname} 
+                        className="w-full px-3 h-12 bg-input-bg rounded-md text-sm text-light focus:outline-none placeholder:text-xs placeholder:text-light-placeholder" 
+                        onChange={(e) => setSurname(e.target.value)} 
+                        required 
+                        />
+                    </div>
+                </div>
 
-            <select value={day} className='p-2 border bg-white' onChange={(e) => setDay(e.target.value)}>
-                <option value='' disabled>Tag</option>
-                {Array.from({ length: 31 }, (_, i) => i + 1).map (d => (
-                    <option key={d} value={String(d).padStart(2, '0')}>{d}</option>
-                ))}
-            </select>
+                <div className='w-full flex flex-col gap-2'>
+                    <label className='text-xs text-light-label'>Geburtsdatum</label>
+                    <div className='w-full flex gap-2.5'>
+                        <Selectbox
+                            aria-label='Tag'
+                            options={DAY_OPTIONS}
+                            value={day}
+                            onValueChange={setDay}
+                            placeholder='Tag'
+                            center
+                        />
+                        <Selectbox
+                            aria-label='Monat'
+                            options={MONTH_OPTIONS}
+                            value={month}
+                            onValueChange={setMonth}
+                            placeholder='Monat'
+                            center
+                        />
+                        <Selectbox
+                            aria-label='Jahr'
+                            options={yearOptions}
+                            value={year}
+                            onValueChange={setYear}
+                            placeholder='Jahr'
+                            center
+                        />
+                    </div>
+                </div>
 
-            <select value={month} className='p-2 border bg-white' onChange={(e) => setMonth(e.target.value)}>
-                <option value='' disabled>Monat</option>
-                {['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'].map((m, i) => (
-                    <option key={i} value={String(i + 1).padStart(2, '0')}>{m}</option>
-                ))}
-            </select>
-
-            <select value={year} className='p-2 border bg-white' onChange={(e) => setYear(e.target.value)}>
-                <option value='' disabled>Jahr</option>
-                {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map(y => (
-                    <option key={y} value={String(y)}>{y}</option>
-                ))}
-            </select>
-
-            <select value={gender} className="p-2 border bg-white" onChange={(e) => setGender(e.target.value)} required>
-                <option value="" disabled>Geschlecht wählen</option>
-                <option value="female">Weiblich</option>
-                <option value="male">Männlich</option>
-                <option value="diverse">Divers</option>
-                <option value="prefer_not_to_say">Keine Angabe</option>
-            </select>
-            <select value={relationship} className="p-2 border bg-white" onChange={(e) => setRelationship(e.target.value)}>
-                <option value="" disabled>Beziehungsstatus</option>
-                <option value="single">Single</option>
-                <option value="relationship">Vergeben</option>
-                <option value="prefer_not_to_say">Keine Angabe</option>
-            </select>
-            <button className="bg-blue-500 text-white p-2 rounded" onClick={() => onSuccess(data)}> Save & Continue</button>
+                <div className='w-full flex flex-col gap-2'>
+                    <label className='text-xs text-light-label'>Gender</label>
+                    <Selectbox
+                        aria-label='Gender'
+                        options={GENDER_OPTIONS}
+                        value={gender}
+                        onValueChange={setGender}
+                        placeholder='Gender'
+                    />
+                </div>
+                <div className='w-full flex flex-col gap-2'>
+                    <label className='text-xs text-light-label'>Beziehungsstatus</label>
+                    <Selectbox
+                        aria-label='Beziehungsstatus'
+                        options={RELATIONSHIP_OPTIONS}
+                        value={relationship}
+                        onValueChange={setRelationship}
+                        placeholder='Beziehungsstatus'
+                    />
+                </div>
+            </div>
+            <button 
+            type='submit'
+            className='flex w-full items-center justify-center gap-2 rounded-full bg-button-bg py-3 text-sm font-semibold'
+            >
+            Weiter
+            </button>
         </div>
     )
 }

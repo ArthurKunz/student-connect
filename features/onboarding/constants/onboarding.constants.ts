@@ -1,3 +1,5 @@
+import { SelectOption } from "@/components/shared/Selectbox"
+
 export const POPULAR_HOBBIES = [
     { label: 'Gaming' },
     { label: 'Technik' },
@@ -118,3 +120,41 @@ export const MAX_HOBBIES = 5
 export const MAX_BYTES = 5 * 1024 * 1024
 
 export const BUCKET = 'avatars'
+
+export const DAY_OPTIONS: SelectOption[] = Array.from({ length: 31 }, (_, i) => {
+    const d = i + 1
+    return { value: String(d).padStart(2, '0'), label: String(d) }
+})
+  
+export const MONTH_LABELS = [
+    'Januar',
+    'Februar',
+    'März',
+    'April',
+    'Mai',
+    'Juni',
+    'Juli',
+    'August',
+    'September',
+    'Oktober',
+    'November',
+    'Dezember',
+] as const
+  
+export const MONTH_OPTIONS: SelectOption[] = MONTH_LABELS.map((m, i) => ({
+    value: String(i + 1).padStart(2, '0'),
+    label: m,
+}))
+
+export const GENDER_OPTIONS: SelectOption[] = [
+    { value: 'female', label: 'Weiblich' },
+    { value: 'male', label: 'Männlich' },
+    { value: 'diverse', label: 'Divers' },
+    { value: 'prefer_not_to_say', label: 'Keine Angabe' },
+]
+
+export const RELATIONSHIP_OPTIONS: SelectOption[] = [
+    { value: 'single', label: 'Single' },
+    { value: 'relationship', label: 'Vergeben' },
+    { value: 'prefer_not_to_say', label: 'Keine Angabe' },
+]
