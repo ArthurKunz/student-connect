@@ -67,41 +67,37 @@ export default function ProfilePictureForm ({ onSuccess, onGoBack }: ProfilePict
     }
 
     return (
-        <div className="flex flex-col gap-4 max-w-sm">
-            <h2 className="text-lg font-bold">Profilbild</h2>
-            <p className="text-sm text-gray-600">Wähle ein Bild aus. Es wird in deinem Profil und auf der Startseite angezeigt.</p>
+        <div className="flex flex-col items-center gap-15 max-w-sm">
+            <div className='w-full h-full flex flex-col items-center gap-2.5'>
+                <h1 className='text-4xl font-bold text-light-heading'>Profil erstellen</h1>
+                <span className='text-center text-sm text-light-subheading'>Lade ein Bild hoch um dein <span className='text-brand text-sm font-semibold'>Profilbild</span> zu erstellen</span>
+            </div>
 
-            <input
-                type="file"
-                accept="image/*"
-                className="text-sm"
-                onChange={(e) => onPickFile(e.target.files?.[0] ?? null)}
-            />
+            <div 
+            className='border border-input-border relative w-40 h-40 rounded-full bg-cover bg-center bg-no-repeat flex items-center justify-center cursor-pointer'
+            style={{ backgroundImage: previewUrl ? `url(${previewUrl})` : `url(/images/noProfilPicture.jpg)` }}
+            >
+                <input
+                    type="file"
+                    accept="image/*"
+                    className="w-full h-full opacity-0"
+                    onChange={(e) => onPickFile(e.target.files?.[0] ?? null)}
+                />
+                <div className='absolute bottom-[5%] right-[5%] border border-primary border-2 w-9 h-9 bg-brand rounded-full'>
 
-            {previewUrl && (
-                <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                        src={previewUrl}
-                        alt="Vorschau Profilbild"
-                        className="h-32 w-32 rounded-full object-cover border border-gray-200"
-                    />
                 </div>
-            )}
+            </div>
 
             {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
 
-            <div className="flex flex-col gap-2">
+            <div className="w-full flex flex-col gap-2">
                 <button
                     type="button"
-                    className="bg-blue-500 text-white p-2 rounded disabled:opacity-50"
+                    className="flex w-full items-center justify-center gap-2 rounded-full bg-button-bg py-3 text-sm font-semibold"
                     disabled={uploading || !file}
                     onClick={() => void handleContinue()}
                 >
-                    {uploading ? 'Wird hochgeladen…' : 'Speichern & weiter'}
-                </button>
-                <button type="button" className="border border-gray-300 p-2 rounded" onClick={onGoBack}>
-                    Zurück
+                    {uploading ? 'Wird hochgeladen…' : 'Weiter'}
                 </button>
             </div>
         </div>
