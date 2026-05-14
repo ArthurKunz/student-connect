@@ -104,7 +104,7 @@ export default function OnboardingScreen () {
                 </div>
             </div>
 
-            <div className='relative h-full px-20 py-20 flex flex-col '>
+            <div className='relative flex w-2/5 h-full flex-col px-20 pt-20 pb-0'>
                 <div className='absolute px-20 top-0 left-[50%] translate-x-[-50%] w-full h-20 flex items-center'>
                     <div className='w-full h-1 bg-secondary rounded-full '>
                         <div
@@ -113,7 +113,7 @@ export default function OnboardingScreen () {
                         />
                     </div>
                 </div>
-                <div className='w-full h-full'>
+                <div className='flex min-h-0 w-full flex-1 flex-col'>
                     {step === 'personal' && (
                         <PersonalDataForm 
                             onSuccess={(data) => {

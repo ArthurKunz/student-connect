@@ -42,79 +42,73 @@ export default function HobbiesDataForm ({ onSuccess, onGoBack }: HobbiesDataPro
     }
 
     return (
-        <div className="w-full flex flex-col items-center gap-3 pt-2 border-t mt-2">
-            <div className="w-100 flex flex-col gap-3 pt-2 border-t mt-2">
-                <div>
-                    <h3 className="text-md font-semibold">Wofür interessierst du dich am meisten?</h3>
-                    <p className="text-sm text-gray-500">Wähle bis zu {MAX_HOBBIES} Kategorien</p>
+        <div className="flex h-full min-h-0 w-full max-w-sm flex-col">
+            <div className="scrollbar-none flex min-h-0 flex-1 flex-col items-center gap-15 overflow-y-auto overscroll-contain">
+                <div className="flex w-full flex-col items-center gap-2.5">
+                    <h1 className='text-4xl font-bold text-light-heading'>Profil erstellen</h1>
+                    <span className='text-center text-sm text-light-subheading'>Wähle deine Hobbies aus. Du kannst auch deine eigenen Hobbies erstellen.</span>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                    {POPULAR_HOBBIES.map(({ label }) => {
-                        const selected = hobbies.includes(label)
-                        return (
-                            <button
-                                key={label}
-                                type="button"
-                                onClick={() => (selected ? removeHobby(label) : togglePopularHobby(label))}
-                                className={
-                                    selected
-                                        ? 'inline-flex items-center gap-1.5 rounded-full border border-blue-700 bg-blue-700 px-3 py-1.5 text-sm text-white'
-                                        : 'inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-800 shadow-sm'
-                                }
-                            >
-                                <span>{label}</span>
-                                {selected && (
-                                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs" aria-hidden>
-                                        ×
-                                    </span>
-                                )}
-                            </button>
-                        )
-                    })}
-                </div>
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
-                    <input
-                        type="text"
-                        placeholder="Eigene Interessen hinzufügen …"
-                        value={customHobbyInput}
-                        className="p-2 border flex-1"
-                        maxLength={80}
-                        onChange={(e) => setCustomHobbyInput(e.target.value)}
-                        onKeyDown={handleCustomHobbyKeyDown}
-                        disabled={hobbies.length >= MAX_HOBBIES}
-                    />
-                    <button
-                        type="button"
-                        onClick={addCustomHobby}
-                        disabled={hobbies.length >= MAX_HOBBIES || !customHobbyInput.trim()}
-                        className="rounded bg-gray-100 px-3 py-2 text-sm font-medium text-gray-800 disabled:opacity-50"
-                    >
-                        Hinzufügen
-                    </button>
-                </div>
-                {hobbies.some((h) => !POPULAR_HOBBIES.some((p) => p.label === h)) && (
-                    <div className="flex flex-wrap gap-2">
-                        <span className="text-xs text-gray-500 w-full">Deine eigenen:</span>
-                        {hobbies
-                            .filter((h) => !POPULAR_HOBBIES.some((p) => p.label === h))
-                            .map((label) => (
-                                <button
-                                    key={label}
-                                    type="button"
-                                    onClick={() => removeHobby(label)}
-                                    className="inline-flex items-center gap-1.5 rounded-full border border-blue-700 bg-blue-700 px-3 py-1.5 text-sm text-white"
-                                >
-                                    <span>{label}</span>
-                                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs" aria-hidden>
-                                        ×
-                                    </span>
-                                </button>
-                            ))}
+                <div className='flex w-full flex-col gap-7.5'>
+                    <div className='w-full flex flex-col gap-5'>
+                        <label className='text-xs text-light-label'>Wähle deine Hobbies aus</label>
+                        <div className="w-full flex flex-wrap gap-x-1.5 gap-y-2.5">
+                            {POPULAR_HOBBIES.map(({ label }) => {
+                                const selected = hobbies.includes(label)
+                                return (
+                                    <button
+                                        key={label}
+                                        type="button"
+                                        onClick={() => (selected ? removeHobby(label) : togglePopularHobby(label))}
+                                        className={
+                                            selected
+                                                ? 'cursor-pointer inline-flex items-center rounded-full border border-input-border bg-brand h-7.5 px-3 text-xs text-light-input'
+                                                : 'cursor-pointer inline-flex items-center rounded-full border border-input-border bg-input-bg h-7.5 px-3 text-xs text-light-placeholder'
+                                        }
+                                    >
+                                        <span>{label}</span>
+                                    </button>
+                                )
+                            })}
+                        </div>
                     </div>
-                )}
-                <p className="text-xs text-gray-500">{hobbies.length} / {MAX_HOBBIES} ausgewählt</p>
-                <button className="bg-blue-500 text-white p-2 rounded" onClick={() => onSuccess(hobbies)}>Save & Continue</button>
-                <button className="bg-blue-500 text-white p-2 rounded" onClick={onGoBack}>back</button>
+                    <div className='flex w-full items-center justify-between'>
+                        <div className='h-0.25 w-full bg-divider-bg'></div>
+                        <span className='px-2.5 text-xs text-light-muted'>Oder</span>
+                        <div className='h-0.25 w-full bg-divider-bg'></div>
+                    </div>
+                    <div className="flex w-full flex-col gap-2">
+                        <div className='flex w-full flex-col gap-5'>
+                            <label className='text-xs text-light-label'>Eigene Interessen hinzufügen</label>
+                            <input
+                                type="text"
+                                placeholder="Eigene Interessen hinzufügen …"
+                                value={customHobbyInput}
+                                className="w-full px-3 h-12 text-xs text-light-input bg-input-bg border border-input-border rounded-md text-sm text-light focus:outline-none placeholder:text-xs placeholder:text-light-placeholder"
+                                maxLength={80}
+                                onChange={(e) => setCustomHobbyInput(e.target.value)}
+                                onKeyDown={handleCustomHobbyKeyDown}
+                                disabled={hobbies.length >= MAX_HOBBIES}
+                            />
+                        </div>
+                        {hobbies.some((h) => !POPULAR_HOBBIES.some((p) => p.label === h)) && (
+                            <div className="flex w-full flex-wrap gap-x-1.5 gap-y-2.5">
+                                {hobbies
+                                    .filter((h) => !POPULAR_HOBBIES.some((p) => p.label === h))
+                                    .map((label) => (
+                                        <button
+                                            key={label}
+                                            type="button"
+                                            onClick={() => removeHobby(label)}
+                                            className="cursor-pointer inline-flex items-center rounded-full border border-input-border bg-brand h-7.5 px-3 text-xs text-light-input"
+                                        >
+                                            <span>{label}</span>
+                                        </button>
+                                    ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <button type="button" className="flex w-full items-center justify-center gap-2 rounded-full bg-button-bg py-3 text-sm font-semibold" onClick={() => onSuccess(hobbies)}>Save & Continue</button>
             </div>
         </div>
     )
