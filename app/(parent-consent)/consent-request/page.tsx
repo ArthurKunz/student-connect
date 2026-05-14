@@ -14,6 +14,11 @@ export default function ParentConsent() {
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
   const router = useRouter()
 
+
+  if (consentStatus === 'approved') router.push('/home')
+  if (consentStatus === 'rejected') handleRejected()
+
+
   useEffect(() => {
     if (!sent) return
 
@@ -37,8 +42,6 @@ export default function ParentConsent() {
 
     return () => clearInterval(pollingRef.current!)
   }, [sent, studentEmail])
-
-
 
 
 
@@ -81,8 +84,6 @@ export default function ParentConsent() {
 
 
 
-
-
   async function handleRejected() {
     const { error } = await supabase.rpc('delete_self')
     if (error) alert(error.message)
@@ -92,48 +93,91 @@ export default function ParentConsent() {
 
 
 
-
-
-  if (sent) {
-    if (consentStatus === 'approved') return (
-      <div className="flex flex-col gap-4 max-w-sm">
-        <div className="text-green-600 text-4xl">✓</div>
-        <h2 className="text-lg font-bold">Deine Eltern haben zugestimmt!</h2>
-        <p className="text-sm text-gray-600">Dein Konto ist aktiv. Du kannst jetzt loslegen.</p>
-        <button className="bg-blue-500 text-white p-2 rounded" onClick={() => router.push('/home')}>
-          Weiter
-        </button>
-      </div>
-    )
-
-    if (consentStatus === 'rejected') return (
-      <div className="flex flex-col gap-4 max-w-sm">
-        <div className="text-red-500 text-4xl">✕</div>
-        <h2 className="text-lg font-bold">Anfrage abgelehnt</h2>
-        <p className="text-sm text-gray-600">Deine Eltern haben die Anmeldung leider abgelehnt.</p>
-        <button className="bg-red-500 text-white p-2 rounded" onClick={handleRejected}>
-          Okay, Konto löschen
-        </button>
-      </div>
-    )
-
-    return (
-      <div className="flex flex-col gap-4 max-w-sm">
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
-          <span className="text-sm text-gray-500">Warte auf Antwort deiner Eltern…</span>
-        </div>
-        <h2 className="text-lg font-bold">E-Mail wurde gesendet</h2>
-        <p className="text-sm text-gray-600">
-          Wir haben eine Einwilligungsanfrage an <strong>{parentEmail}</strong> gesendet.
-          Diese Seite aktualisiert sich automatisch.
-        </p>
-        <p className="text-xs text-gray-400">Lass diese Seite offen.</p>
-      </div>
-    )
-  }
-
   return (
+    <div className='w-screen h-screen p-2.5 flex bg-primary'>
+      
+      <div className='w-3/5 flex justify-center items-end h-full rounded-3xl bg-[linear-gradient(180deg,#0056FF_0%,#0c0c0c_75%,#0c0c0c_100%)]'>
+        <div className='flex flex-col items-center w-65 h-75 mb-15 gap-10'>
+          <div className='flex flex-col items-center'>
+            <span className='text-center text-sm text-brand font-semibold mb-2.5'>Student Connect</span>
+            <span className='text-center text-3xl text-light-heading font-semibold mb-2'>Starte jetzt mit uns</span>
+            <span className='text-center text-xs w-60 text-light-subheading'>Folge diesen einfachen Schritten, um deinen account zu erstellen</span>
+          </div>
+          <div className='w-full flex flex-col gap-2'>
+            <div className='w-full h-12.5 bg-white rounded-xl flex gap-3 items-center px-3'>
+              <div className='text-xs text-light-heading  w-6 h-6 bg-brand rounded-full flex justify-center items-center'>1</div>
+              <span className='text-xs text-brand'>Erstelle deinen Account</span>
+            </div>
+            <div className='w-full h-12.5 bg-white rounded-xl flex gap-3 items-center px-3'>
+              <div className='text-xs text-light-heading  w-6 h-6 bg-brand rounded-full flex justify-center items-center'>2</div>
+              <span className='text-xs text-brand'>Verifiziere dein Account</span>
+            </div>
+            <div className='w-full h-12.5 bg-white rounded-xl flex gap-3 items-center px-3'>
+              <div className='text-xs text-light-heading  w-6 h-6 bg-brand rounded-full flex justify-center items-center'>3</div>
+              <span className='text-xs text-brand'>Erstelle dein Profil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className='relative flex w-2/5 h-full flex-col px-20 pt-20 pb-0'>
+        <div className='flex min-h-0 w-full flex-1 flex-col'>
+
+
+
+          {!sent && (
+            <div className='w-full flex flex-col items-center gap-15'>
+              <div className='w-full h-full flex flex-col items-center gap-2.5'>
+                <h1 className='text-4xl font-bold text-light-heading'>Einwilligung</h1>
+                <span className='text-center text-sm text-light-subheading'>Da du <span className='text-brand text-sm font-semiboldtext-brand text-sm font-semibold'>unter 16</span> bist müssen deine Eltern der Erstellung eines Accounts einwiligen.</span>
+              </div>
+              <div className='w-full flex flex-col gap-5'>
+                <div className='w-full flex flex-col gap-2'>
+                  <label className='text-xs text-light-label'>Vorname</label>
+                  <input
+                    type="email"
+                    placeholder="Email der Eltern"
+                    value={parentEmail}
+                    className="w-full text-light-input text-xs px-3 h-12 bg-input-bg border border-input-border rounded-md text-sm text-light focus:outline-none placeholder:text-xs placeholder:text-light-placeholder"
+                    onChange={e => setParentEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              <button 
+              onClick={handleSubmit}
+              className='flex w-full items-center justify-center gap-2 rounded-full bg-button-bg py-3 text-sm font-semibold'
+              disabled={loading || !parentEmail}
+              >
+              {loading ? 'Wird gesendet…' : 'Einwilligung anfordern'}
+              </button>
+            </div>
+          )}
+
+          {(sent && consentStatus === 'pending') && (
+            <div className='w-full flex flex-col items-center gap-15'>
+              <div className='w-full h-full flex flex-col items-center gap-2.5'>
+                <h1 className='text-4xl font-bold text-light-heading'>Einwilligung</h1>
+                <span className='text-center text-sm text-light-subheading'>Email hat eine Einwilligungsemail erhalten. Sobald sie diese akzeptieren, wird dein Account automatisch erstellt.</span>
+              </div>
+              <div className='w-full flex justify-center gap-5'>
+                <div className='w-25 h-25 bg-brand rounded-full'/>
+              </div>
+              <div className='w-full h-full flex flex-col items-center gap-2.5'>
+                <h1 className='text-lg font-bold text-light-heading'>Wir warten auf die Einwilligung</h1>
+                <span className='text-center text-xs text-light-subheading text-center'>Der Empfänger der Email muss die Erstellung des Accounts bestätigen bevor du fortfahren kannst</span>
+              </div>
+            </div>
+          )}
+
+
+
+        </div>
+      </div>
+    </div>
+  )
+}
+
+{/* 
     <div className="flex flex-col gap-4 max-w-sm">
       <h2 className="text-lg font-bold">Einwilligung der Eltern erforderlich</h2>
       <p className="text-sm text-gray-600">
@@ -154,5 +198,4 @@ export default function ParentConsent() {
         {loading ? 'Wird gesendet…' : 'Einwilligung anfordern'}
       </button>
     </div>
-  )
-}
+*/}
